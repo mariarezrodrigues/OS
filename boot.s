@@ -37,5 +37,5 @@ _start:
     jmp 1b
 
 // set size of the _start symbol to the current location '.' minus the _start
-// useful for debugging or call tracing
+// useful for debugging
 .size _start, . - _start
