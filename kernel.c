@@ -1,13 +1,14 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "psf.h"
+#include "multiboot.h"
 
 extern char _binary_font_psf_start[];
 extern char _binary_font_psf_end[];
-extern char *fb;
-extern int scanline;
-extern int screen_width;
-extern int screen_height;
+char *fb = 0;
+int scanline = 0;
+int screen_width = 0;
+int screen_height = 0;
 
 #define PIXEL uint32_t
 #define USHRT_MAX 65535
@@ -199,8 +200,13 @@ void console_writestring(const char* data)
     console_write(data, strlen(data));
 }
 
-void kernel_main()
+void kernel_main(multiboot_info_t *mbi)
 {
+    fb           = (char*)(uint32_t)mbi->framebuffer_addr;
+    scanline     = mbi->framebuffer_pitch;
+    screen_width  = mbi->framebuffer_width;
+    screen_height = mbi->framebuffer_height;
+
     console_init();
     console_writestring("Testing!");
 }

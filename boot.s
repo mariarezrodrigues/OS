@@ -1,7 +1,8 @@
 // constants for multiboot loader
-.set ALIGN,    1<<0
+.set ALIGN,      1<<0
 .set MEMINFO,    1<<1
-.set FLAGS,     ALIGN | MEMINFO
+.set VIDEOMODE,   1<<2
+.set FLAGS,     ALIGN | MEMINFO | VIDEOMODE
 .set MAGIC,     0x1BADB002
 .set CHECKSUM,  -(MAGIC + FLAGS)
 
@@ -11,6 +12,9 @@
 .long MAGIC
 .long FLAGS
 .long CHECKSUM
+.long 0, 0, 0, 0, 0
+.long 0
+.long 1024, 768, 32
 
 // allocate room for small stack
 .section .bss
@@ -26,6 +30,8 @@ stack_top:
 _start:
     // stack setup
     mov $stack_top, %esp
+
+    push %ebx
 
     call kernel_main
 
